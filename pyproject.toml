@@ -1,0 +1,37 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "liquidie"
+version = "0.1.0"
+description = "Ornstein-Zernike integral equation solver and mode-coupling theory for multi-component liquids"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+dependencies = [
+    "numpy>=1.22",
+    "scipy>=1.7",
+    "numba>=0.57",
+    "typer>=0.9",
+    "pydantic>=2.0",
+    "sympy>=1.10",
+    "tomli; python_version < '3.11'",
+]
+
+[project.optional-dependencies]
+plot = ["matplotlib"]
+dev = ["pytest", "ruff", "pre-commit"]
+
+[project.scripts]
+liquidie = "liquidie.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/liquidie"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["slow: marks tests as slow (deselect with '-m \"not slow\"')"]
+
+[tool.ruff]
+src = ["src"]

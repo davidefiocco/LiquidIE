@@ -1,0 +1,76 @@
+"""Tests for configuration loading and validation."""
+
+from pathlib import Path
+
+import pytest
+
+from liquidie.config import Config, load_config
+
+
+EXAMPLES_DIR = Path(__file__).resolve().parent.parent / "examples"
+
+
+class TestLoadConfig:
+    def test_load_1species(self):
+        cfg = load_config(EXAMPLES_DIR / "hard_sphere_1species.toml")
+        assert cfg.system.n_species == 1
+        assert cfg.system.temperature == 2.0
+        assert len(cfg.potential.sigma) == 1
+
+    def test_load_2species(self):
+        cfg = load_config(EXAMPLES_DIR / "hard_sphere_2species.toml")
+        assert cfg.system.n_species == 2
+        assert len(cfg.potential.epsilon) == 4
+
+    def test_load_binary_mixture(self):
+        cfg = load_config(EXAMPLES_DIR / "binary_mixture.toml")
+        assert cfg.system.n_species == 2
+        assert cfg.grid.dr == 0.001
+
+    def test_n_species_inferred_from_density(self):
+        cfg = Config(
+            system={"temperature": 1.0, "density": [0.1, 0.2, 0.3]},
+            grid={"dr": 0.01, "r_max": 10.0},
+            potential={
+                "expression": "hard_sphere",
+                "epsilon": [1.0] * 9,
+                "sigma": [1.0] * 9,
+            },
+        )
+        assert cfg.system.n_species == 3
+
+    def test_n_species_mismatch_raises(self):
+        with pytest.raises(ValueError, match="n_species=2.*len\\(density\\)=1"):
+            Config(
+                system={"temperature": 1.0, "density": [0.1], "n_species": 2},
+                grid={"dr": 0.01, "r_max": 10.0},
+                potential={
+                    "expression": "hard_sphere",
+                    "epsilon": [1.0],
+                    "sigma": [1.0],
+                },
+            )
+
+    def test_negative_dr_raises(self):
+        with pytest.raises(ValueError, match="dr must be positive"):
+            Config(
+                system={"temperature": 1.0, "density": [0.1]},
+                grid={"dr": -0.01, "r_max": 10.0},
+                potential={
+                    "expression": "hard_sphere",
+                    "epsilon": [1.0],
+                    "sigma": [1.0],
+                },
+            )
+
+    def test_wrong_potential_dimension_raises(self):
+        with pytest.raises(ValueError, match="potential.epsilon has 1 entries"):
+            Config(
+                system={"temperature": 1.0, "density": [0.1, 0.2]},
+                grid={"dr": 0.01, "r_max": 10.0},
+                potential={
+                    "expression": "hard_sphere",
+                    "epsilon": [1.0],
+                    "sigma": [1.0, 1.0, 1.0, 1.0],
+                },
+            )

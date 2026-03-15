@@ -1,0 +1,23 @@
+[system]
+temperature = 2.2
+density = [0.1683, 0.1683]
+
+[grid]
+dr = 0.001
+r_max = 40.0
+
+[potential]
+expression = "hard_sphere"
+epsilon = [1.0, 0.8, 0.8, 1.2]
+sigma = [1.0, 0.88, 0.88, 0.8]
+
+[solver]
+closure = "PY"
+tolerance = 1e-8
+
+[restart]
+enabled = false
+file = "gamma.dat"
+
+[output]
+directory = "./results"
