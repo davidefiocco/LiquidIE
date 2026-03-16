@@ -569,7 +569,7 @@ class TestPYSquareWell:
 
     References
     ----------
-    - Henderson & Grundke, J. Chem. Phys. 63, 601 (1975)
+    - Barker & Henderson, J. Chem. Phys. 47, 4714 (1967)
     """
 
     @pytest.fixture(scope="class")

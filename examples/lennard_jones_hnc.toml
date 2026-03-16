@@ -1,0 +1,35 @@
+# Lennard-Jones fluid at Verlet's state point II with the HNC closure.
+#
+# This is a classical benchmark for liquid state theory:
+#   T* = 2.74, rho* = 0.844 (reduced LJ units)
+#
+# The first peak of g(r) appears near r ~ 1.05 sigma with height ~ 2.4.
+# HNC underestimates the peak by 5-10 % relative to molecular dynamics.
+#
+# References:
+#   Verlet, Phys. Rev. 165, 201 (1968)
+#   Hansen & McDonald, Theory of Simple Liquids, 4th ed., Ch. 4
+
+[system]
+temperature = 2.74
+density = [0.844]
+
+[grid]
+dr = 0.01
+r_max = 20.0
+
+[potential]
+expression = "lennard_jones"
+epsilon = [1.0]
+sigma = [1.0]
+
+[solver]
+closure = "HNC"
+tolerance = 1e-8
+
+[restart]
+enabled = false
+file = "gamma.dat"
+
+[output]
+directory = "./results_lj_hnc"

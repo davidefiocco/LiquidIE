@@ -1,10 +1,24 @@
+# Single-component hard spheres with the Percus-Yevick closure.
+#
+# This is the simplest and best-studied liquid state model.  At packing
+# fraction eta = 0.3 (rho = 6*eta/pi ~ 0.5730) the fluid is well into
+# the structured-liquid regime: g(r) has a clear first peak near
+# r = sigma with height ~ 2.35 (exact PY contact value).
+#
+# The PY closure is exact for the hard-sphere direct correlation
+# function c(r), which vanishes identically for r > sigma.
+#
+# References:
+#   Wertheim, Phys. Rev. Lett. 10, 321 (1963)
+#   Thiele, J. Chem. Phys. 39, 474 (1963)
+
 [system]
-temperature = 2.0
-density = [0.0683]
+temperature = 1.0
+density = [0.5730]    # eta = 0.3
 
 [grid]
 dr = 0.01
-r_max = 40.0
+r_max = 20.0
 
 [potential]
 expression = "hard_sphere"
@@ -15,9 +29,5 @@ sigma = [1.0]
 closure = "PY"
 tolerance = 1e-8
 
-[restart]
-enabled = false
-file = "gamma.dat"
-
 [output]
-directory = "./results"
+directory = "./results_hs_1species"

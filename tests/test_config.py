@@ -14,18 +14,20 @@ class TestLoadConfig:
     def test_load_1species(self):
         cfg = load_config(EXAMPLES_DIR / "hard_sphere_1species.toml")
         assert cfg.system.n_species == 1
-        assert cfg.system.temperature == 2.0
+        assert cfg.system.temperature == 1.0
         assert len(cfg.potential.sigma) == 1
 
-    def test_load_2species(self):
-        cfg = load_config(EXAMPLES_DIR / "hard_sphere_2species.toml")
+    def test_load_binary(self):
+        cfg = load_config(EXAMPLES_DIR / "hard_sphere_binary.toml")
         assert cfg.system.n_species == 2
         assert len(cfg.potential.epsilon) == 4
+        assert cfg.potential.sigma == [1.0, 0.8, 0.8, 0.6]
 
-    def test_load_binary_mixture(self):
-        cfg = load_config(EXAMPLES_DIR / "binary_mixture.toml")
-        assert cfg.system.n_species == 2
-        assert cfg.grid.dr == 0.001
+    def test_load_lennard_jones(self):
+        cfg = load_config(EXAMPLES_DIR / "lennard_jones_hnc.toml")
+        assert cfg.system.n_species == 1
+        assert cfg.solver.closure == "HNC"
+        assert cfg.system.temperature == 2.74
 
     def test_n_species_inferred_from_density(self):
         cfg = Config(

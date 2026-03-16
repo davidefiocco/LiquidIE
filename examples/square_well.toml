@@ -1,0 +1,39 @@
+# Square-well fluid with PY closure.
+#
+# A hard core (r < sigma) plus an attractive well of depth epsilon
+# extending from sigma to 1.5*sigma.  This is the simplest model that
+# captures short-range attraction in colloidal suspensions.
+#
+# At T = 2.0 the well is moderate (epsilon/kT = 0.5).  The g(r) shows
+# a clear discontinuity at r = 1.5*sigma where the well switches off.
+#
+# The potential uses a custom Piecewise SymPy expression — any valid
+# SymPy expression over r, sigma, and epsilon can be used here.
+#
+# References:
+#   Barker & Henderson, J. Chem. Phys. 47, 4714 (1967)
+#   Noro & Frenkel, J. Chem. Phys. 113, 2941 (2000)
+
+[system]
+temperature = 2.0
+density = [0.3]
+
+[grid]
+dr = 0.01
+r_max = 20.0
+
+[potential]
+expression = "Piecewise((1e30, r < sigma), (-epsilon, r < 1.5 * sigma), (0, True))"
+epsilon = [1.0]
+sigma = [1.0]
+
+[solver]
+closure = "PY"
+tolerance = 1e-8
+
+[restart]
+enabled = false
+file = "gamma.dat"
+
+[output]
+directory = "./results_square_well"

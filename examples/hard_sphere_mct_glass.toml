@@ -1,0 +1,40 @@
+# Hard spheres near the MCT glass transition.
+#
+# The packing fraction eta = 0.53 is above the MCT critical value
+# eta_c ~ 0.516 (with PY input), so the non-ergodicity parameter
+# F(q) converges to a nonzero plateau — the system is an ideal glass.
+#
+# Usage:
+#   liquidie solve  -c examples/hard_sphere_mct_glass.toml -o results_mct/
+#   liquidie mct    -c examples/hard_sphere_mct_glass.toml -i results_mct/ -o results_mct/ -n 15
+#
+# The coarse grid (dr=0.05, r_max=10) keeps the MCT kernel tractable
+# since it scales as O(n_pts^3) per iteration.
+#
+# References:
+#   Bengtzelius, Gotze & Sjolander, J. Phys. C 17, 5915 (1984)
+#   Gotze, Complex Dynamics of Glass-Forming Liquids (Oxford, 2009)
+
+[system]
+temperature = 1.0
+density = [1.0122]    # rho = 6*eta/pi with eta = 0.53
+
+[grid]
+dr = 0.05
+r_max = 10.0
+
+[potential]
+expression = "hard_sphere"
+epsilon = [1.0]
+sigma = [1.0]
+
+[solver]
+closure = "PY"
+tolerance = 1e-8
+
+[restart]
+enabled = false
+file = "gamma.dat"
+
+[output]
+directory = "./results_mct_glass"
